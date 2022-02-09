@@ -114,12 +114,13 @@
 			<version>1.2</version>
 		</dependency>
 	
-		<!-- Test -->
+		<!-- Tester -->
 		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+		<!-- JUnit의 GroupId 및 ArtifactId가 바뀌었다. -->
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.13.2</version>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>5.8.2</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -134,12 +135,12 @@
 		</dependency>
 		
 		<!-- 데이터베이스 사용 관련 의존성 -->
-		<!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc8 -->
-		<!-- 만약 JDK 11 이상이라면 ArtifactId를 OJDBC 11로 바꿔야 한다. -->
+		<!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc10 -->
+		<!-- 이름이 OJDBC 8 → OJDBC 10으로 바뀌었다. 하지만 JDK 11 이상이라면 ArtifactId를 OJDBC 11로 바꿔야 한다. -->
 		<dependency>
 			<groupId>com.oracle.database.jdbc</groupId>
-			<artifactId>ojdbc8</artifactId>
-			<version>21.5.0.0</version>
+			<artifactId>ojdbc10</artifactId>
+			<version>19.13.0.0.1</version>
 		</dependency>
 		
 		<!-- 스프링 JDBC 의존성 -->
@@ -151,27 +152,44 @@
 		</dependency>
 				
 		<!-- DBCP 의존성 -->
-		<!--
-			내부의 "Test Dependencies" 중 H2 Database 의존성에 아래 3가지 보안 취약점이 있는 것이 보인다.
-			대충 보기엔 테스트용 환경에서만 발생하는 취약점으로 생각된다.
-			CVE-2022-23221 / CVE-2021-42392 / CVE-2021-23463
-			H2 Database의 버전을 반드시 2.1.210 이상으로 올려야 한다. (220208 기준)
-		-->
+		<!-- ▶▶▶▶▶ 취약점 있는 내부의존성: H2 Database (required: 2.1.210 / used: 1.4.200) -->
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-dbcp2 -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-dbcp2</artifactId>
 			<version>2.9.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.h2database</groupId>
+					<artifactId>h2</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		
 		<!-- MyBatis 의존성 -->
 		<!-- 마이바티스 코어 의존성 -->
-		<!-- 내부 의존성으로 "또" H2 Database와 log4j-core 취약점 버전을 사용하고 있으니 신경 써야 한다. -->
+		<!-- ▶▶▶▶▶ 취약점 있는 내부의존성: Log4j (required: 2.17.1 / used: 1.2.17) -->
+		<!-- ▶▶▶▶▶ 취약점 있는 내부의존성: H2 Database (required: 2.1.210 / used: 1.4.200) -->
+		<!-- ▶▶▶▶▶ 취약점 있는 내부의존성: Log4j Core (ALL VERSIONS) -->
 		<!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
 		<dependency>
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis</artifactId>
 			<version>3.5.9</version>
+			<exclusions>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.h2database</groupId>
+					<artifactId>h2</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.logging.log4j</groupId>
+					<artifactId>log4j-core</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!-- 스프링용 마이바티스 변환 의존성(젠더) -->
 		<!-- https://mvnrepository.com/artifact/org.mybatis/mybatis-spring -->
@@ -209,12 +227,23 @@
 			<artifactId>commons-io</artifactId>
 			<version>2.11.0</version>
 		</dependency>
-		<!-- 내부 의존성으로 보안 취약점이 있는 commons-io 2.2버전과 JUnit 4.12 버전을 사용하고 있다. -->
+		<!-- ▶▶▶▶▶ 취약점 있는 내부의존성: Commons IO (required: 2.11 / used: 2.2) -->
+		<!-- ▶▶▶▶▶ 취약점 있는 내부의존성: JUnit (required: 5.8.2 / used: 4.12) → JUnit Jupiter API로 대체되었으므로 그냥 제거해 버렸다. -->
 		<!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
 		<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
 			<version>1.4</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-io</groupId>
+					<artifactId>commons-io</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>junit</groupId>
+					<artifactId>junit</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!-- 메일 발송을 위한 자바메일 API 의존성 -->
@@ -250,6 +279,16 @@
 			<artifactId>spring-websocket</artifactId>
 			<version>${org.springframework-version}</version>
 		</dependency>
+		
+		<!-- exclusions 선언으로 빠진 내부의존성을 여기서 보충한다. -->
+		<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>2.1.210</version>
+			<scope>test</scope>
+		</dependency>
+
 
 	</dependencies>
 
