@@ -11,7 +11,7 @@
 	<packaging>war</packaging>
 	<version>1.0.0-BUILD-SNAPSHOT</version>
 
-	<!-- 기본 변수 -->
+	<!-- ▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶ 기본 변수 ▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶ -->
 	<properties>
 
 		<!-- 자바, 스프링, aspectj -->
@@ -26,9 +26,11 @@
 		
 	</properties>
 	
+	
+	<!-- ▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶ 의존성 ▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶ -->
 	<dependencies>
 
-		<!-- Spring -->
+		<!-- ▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶ 스프링 관련 ▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶ -->
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -56,7 +58,7 @@
 			<version>${org.aspectj-version}</version>
 		</dependency>
 		
-		<!-- Logging -->
+		<!-- ▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶ 로깅 ▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶ -->
 		<!-- Slf4j 기본 라이브러리 설정 두 가지. -->
 		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
 		<dependency>
@@ -84,14 +86,22 @@
 			<version>${org.log4j-version}</version>
 		</dependency>
 
-		<!-- @Inject -->
+		<!-- ▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶ 기타 ▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶ -->
+		<!--
+			오토 인젝션인 @Autowired나 @Resource 등을 쓰기 위해 필요한 설정
+			원래 스프링 설정파일에서 의존성 설정할 때
+			<contstructor-arg> 아니면 <property> 태그로 의존 대상 객체를 명시해야 했다.
+			하지만 이 의존성을 사용하면 스프링 컨테이너가 자동으로 의존성을 설정할 수 있다.
+			https://engkimbs.tistory.com/682
+		-->
 		<!-- https://mvnrepository.com/artifact/javax.inject/javax.inject -->
 		<dependency>
 			<groupId>javax.inject</groupId>
 			<artifactId>javax.inject</artifactId>
 			<version>1</version>
 		</dependency>
-				
+
+		<!-- ▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶ 서블릿 ▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶ -->
 		<!-- Servlet -->
 		<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
 		<dependency>
@@ -113,8 +123,16 @@
 			<artifactId>jstl-api</artifactId>
 			<version>1.2</version>
 		</dependency>
-	
-		<!-- Tester -->
+		<!-- 스프링 TestContext Framework -->
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-test -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${org.springframework-version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- ▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶ 테스팅 ▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶ -->
 		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
 		<!-- JUnit의 GroupId 및 ArtifactId가 바뀌었다. -->
 		<dependency>
@@ -124,17 +142,7 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- 기타 의존성류 -->
-		<!-- 스프링 TestContext Framework -->
-		<!-- https://mvnrepository.com/artifact/org.springframework/spring-test -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>${org.springframework-version}</version>
-			<scope>test</scope>
-		</dependency>
-		
-		<!-- 데이터베이스 사용 관련 의존성 -->
+		<!-- ▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶ 데이터베이스 ▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶ -->
 		<!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc10 -->
 		<!-- 이름이 OJDBC 8 → OJDBC 10으로 바뀌었다. 하지만 JDK 11 이상이라면 ArtifactId를 OJDBC 11로 바꿔야 한다. -->
 		<dependency>
@@ -142,7 +150,6 @@
 			<artifactId>ojdbc10</artifactId>
 			<version>19.13.0.0.1</version>
 		</dependency>
-		
 		<!-- 스프링 JDBC 의존성 -->
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
 		<dependency>
@@ -150,7 +157,6 @@
 			<artifactId>spring-jdbc</artifactId>
 			<version>${org.springframework-version}</version>
 		</dependency>
-				
 		<!-- DBCP 의존성 -->
 		<!-- ▶▶▶▶▶ 취약점 있는 내부의존성: H2 Database (required: 2.1.210 / used: 1.4.200) -->
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-dbcp2 -->
@@ -165,7 +171,6 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		
 		<!-- MyBatis 의존성 -->
 		<!-- 마이바티스 코어 의존성 -->
 		<!-- ▶▶▶▶▶ 취약점 있는 내부의존성: Log4j (required: 2.17.1 / used: 1.2.17) -->
@@ -198,7 +203,8 @@
 			<artifactId>mybatis-spring</artifactId>
 			<version>2.0.7</version>
 		</dependency>
-		
+
+		<!-- ▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶ 기타 ▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶▶ -->
 		<!-- 롬복 : 클래스 코드 자동화 라이브러리 -->
 		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
 		<dependency>
@@ -288,7 +294,6 @@
 			<version>2.1.210</version>
 			<scope>test</scope>
 		</dependency>
-
 
 	</dependencies>
 
