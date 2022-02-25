@@ -80,7 +80,7 @@
 		    즉, 내가 실행하고 싶지 않은 로거가 있을 경우, 아래와 같이 주석처리하면 된다.
 	-->
 	<root>
-		<priority value="warn" />
+		<priority value="trace" />
 		<appender-ref ref="console" />
 		<!-- <appender-ref ref="file" /> -->
 		<!-- <appender-ref ref="daily" /> -->
